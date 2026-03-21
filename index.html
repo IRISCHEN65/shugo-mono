@@ -959,12 +959,19 @@ function showResult() {
   document.getElementById('rStat2Label').textContent = r.stat2.label;
   document.getElementById('rStat2Val').textContent   = r.stat2.val;
 
-  const url = encodeURIComponent(window.location.href);
-  const text = encodeURIComponent(
-    `我的戀愛人格是「${r.name}」${r.emoji}\n來測測你是哪種戀愛生物？\n#修狗 #面癱貓 #sansanink`
-  );
+  const siteUrl = 'https://irischen65.github.io/shugo-mono/';
+  const url = encodeURIComponent(siteUrl);
   const lineText = encodeURIComponent(
-    `我的戀愛人格是「${r.name}」${r.emoji}\n來測測你是哪種戀愛生物？\n#修狗 #面癱貓 #sansanink\n${window.location.href}`
+`我的戀愛人格是「${r.name}」${r.emoji}
+來測測你是哪種戀愛生物？
+#修狗 #面癱貓 #sansanink
+${siteUrl}`
+  );
+  const threadsText = encodeURIComponent(
+`我的戀愛人格是「${r.name}」${r.emoji}
+來測測你是哪種戀愛生物？
+#修狗 #面癱貓 #sansanink
+${siteUrl}`
   );
 
   const lineBtn = document.getElementById('lineBtn');
@@ -973,7 +980,7 @@ function showResult() {
     : `https://social-plugins.line.me/lineit/share?url=${url}&text=${lineText}`;
 
   document.getElementById('threadsBtn').href =
-    `https://www.threads.net/intent/post?text=${text}%0A${url}`;
+    `https://www.threads.net/intent/post?text=${threadsText}`;
 
   const btn = document.getElementById('copyBtn');
   btn.textContent = '📋 複製測驗連結';
