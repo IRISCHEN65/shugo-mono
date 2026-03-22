@@ -50,38 +50,43 @@ body {
 /* ══════════════════════════════
    COVER
 ══════════════════════════════ */
-#cover { display: flex; flex-direction: column; }
-
-.cover-img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  background: var(--mid);
-  position: relative;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-.cover-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.cover-placeholder {
+#cover {
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 10px;
+  overflow: hidden;
 }
-.cover-placeholder-emoji { font-size: 80px; }
-.cover-placeholder-text  { font-size: 12px; color: var(--gray); letter-spacing: 0.05em; }
-
-.cover-body { padding: 28px 28px 48px; display: flex; flex-direction: column; flex: 1; }
-
+.cover-fullscreen {
+  position: relative;
+  width: 100%; flex: 1;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.cover-svg {
+  width: 100%; flex: 1;
+  display: block; min-height: 0;
+}
+.cover-photo {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; z-index: 1;
+}
+.cover-overlay {
+  position: relative; z-index: 2;
+  padding: 20px 28px 36px;
+  background: linear-gradient(to top, #FAFAF8 70%, transparent 100%);
+  flex-shrink: 0;
+}
 .cover-eyebrow {
   font-size: 11px; font-weight: 500; color: var(--gray);
-  letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 14px;
+  letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 10px;
 }
 .cover-title {
-  font-size: 32px; font-weight: 900; line-height: 1.2;
-  letter-spacing: -0.02em; margin-bottom: 14px;
+  font-size: 30px; font-weight: 900; line-height: 1.2;
+  letter-spacing: -0.02em; margin-bottom: 10px;
 }
 .cover-desc {
-  font-size: 14px; font-weight: 300; color: #666;
-  line-height: 1.9; margin-bottom: 32px; flex: 1;
+  font-size: 13px; font-weight: 300; color: #666;
+  line-height: 1.9; margin-bottom: 24px;
 }
 .cover-start {
   width: 100%; padding: 18px;
@@ -121,16 +126,32 @@ body {
 
 .q-count { font-size: 12px; color: var(--gray); font-weight: 500; }
 
-.q-img {
-  width: 100%; aspect-ratio: 3/2;
-  background: var(--soft); position: relative; overflow: hidden;
+.q-img-area {
+  width: 100%; height: 56vw; min-height: 260px; max-height: 400px;
+  position: relative; overflow: hidden;
+  background: var(--soft);
+  background-size: cover; background-position: center;
+  flex-shrink: 0;
 }
-.q-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .q-img-placeholder {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 56px;
+  font-size: 80px;
 }
+.quiz-nav-float {
+  position: absolute; top: 0; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px;
+  z-index: 2;
+}
+.back-btn-float {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1.5px solid rgba(0,0,0,0.2);
+  background: rgba(255,255,255,0.6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; cursor: pointer; color: var(--black);
+}
+.q-count { font-size: 12px; font-weight: 500; color: var(--black); }
 
 .q-body { padding: 22px 24px 0; }
 .q-text {
@@ -240,6 +261,46 @@ body {
   padding: 18px; margin-bottom: 24px;
   font-size: 14px; font-weight: 300; color: #444; line-height: 2;
 }
+
+.r-roast {
+  background: #111; color: #fff;
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  font-size: 13px; font-weight: 500;
+  line-height: 1.7; margin-bottom: 20px;
+  text-align: center; letter-spacing: 0.02em;
+}
+
+/* match row */
+.r-match-row {
+  display: flex; gap: 10px; margin-bottom: 24px;
+}
+.r-match-box {
+  flex: 1; padding: 16px; border-radius: var(--radius);
+  display: flex; flex-direction: column; gap: 6px;
+}
+.r-match-yes { background: #FFF0F3; border: 1.5px solid #F5C4D1; }
+.r-match-no  { background: var(--soft); border: 1.5px solid var(--mid); }
+.r-match-label {
+  font-size: 11px; font-weight: 500;
+  color: var(--gray); letter-spacing: 0.05em;
+}
+.r-match-name {
+  font-size: 13px; font-weight: 700; color: var(--black);
+}
+.r-match-desc {
+  font-size: 12px; font-weight: 300; color: #666; line-height: 1.6;
+}
+
+.r-match-img {
+  width: 100%; aspect-ratio: 1/1;
+  border-radius: 10px; overflow: hidden;
+  background: var(--white);
+  margin-bottom: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+.r-match-img img { width:100%; height:100%; object-fit:cover; display:block; }
+.r-match-img-ph { font-size: 36px; }
 
 /* share section */
 .r-share-label {
@@ -351,99 +412,75 @@ body {
 
 <!-- ══ COVER ══ -->
 <div class="screen" id="cover">
-  <div class="cover-img">
-    <!-- 換成你的封面圖 → <img src="cover.jpg" alt=""> -->
-    <svg viewBox="0 0 430 430" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="display:block">
+  <!-- 滿版封面圖 -->
+  <div class="cover-fullscreen" id="coverImg">
+    <!-- 封面圖 -->
+    <img src="images/cover.jpg" alt="" class="cover-photo" onerror="this.style.display='none'">
+    <!-- SVG 備用（有封面圖時自動被蓋住） -->
+    <svg viewBox="0 0 430 430" xmlns="http://www.w3.org/2000/svg" class="cover-svg" id="coverSvg">
       <rect width="430" height="430" fill="#E8E5DF"/>
-      <!-- ground line -->
       <line x1="0" y1="340" x2="430" y2="340" stroke="#111" stroke-width="1.5" opacity="0.15"/>
-
-      <!-- === SHUGO (dog) left === -->
-      <!-- body -->
       <ellipse cx="145" cy="295" rx="72" ry="78" fill="white" stroke="#111" stroke-width="2.5"/>
-      <!-- head -->
       <circle cx="145" cy="200" r="58" fill="white" stroke="#111" stroke-width="2.5"/>
-      <!-- ears -->
       <ellipse cx="108" cy="162" rx="18" ry="26" fill="#D8D6D0" stroke="#111" stroke-width="2.2" transform="rotate(-18 108 162)"/>
       <ellipse cx="182" cy="162" rx="18" ry="26" fill="#D8D6D0" stroke="#111" stroke-width="2.2" transform="rotate(18 182 162)"/>
-      <!-- eyes -->
-      <circle cx="130" cy="196" r="11" fill="#111"/>
-      <circle cx="160" cy="196" r="11" fill="#111"/>
-      <circle cx="133" cy="192" r="4" fill="white"/>
-      <circle cx="163" cy="192" r="4" fill="white"/>
-      <!-- nose -->
+      <circle cx="130" cy="196" r="11" fill="#111"/><circle cx="160" cy="196" r="11" fill="#111"/>
+      <circle cx="133" cy="192" r="4" fill="white"/><circle cx="163" cy="192" r="4" fill="white"/>
       <ellipse cx="145" cy="213" rx="8" ry="6" fill="#111"/>
-      <!-- happy mouth -->
       <path d="M133 223 Q145 234 157 223" fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round"/>
-      <!-- tail wagging -->
       <path d="M217 310 Q255 270 265 240 Q268 225 258 220" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
-      <!-- paws -->
       <ellipse cx="105" cy="338" rx="22" ry="12" fill="white" stroke="#111" stroke-width="2"/>
       <ellipse cx="180" cy="338" rx="22" ry="12" fill="white" stroke="#111" stroke-width="2"/>
-      <!-- name tag -->
       <rect x="112" y="350" width="66" height="22" rx="11" fill="#111"/>
       <text x="145" y="365" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="white" letter-spacing="1">SHUGO</text>
-
-      <!-- === MONO (cat) right === -->
-      <!-- body -->
       <ellipse cx="295" cy="295" rx="62" ry="70" fill="#111" stroke="#111" stroke-width="2"/>
-      <!-- head -->
       <circle cx="295" cy="207" r="52" fill="#111" stroke="#111" stroke-width="2"/>
-      <!-- ears -->
       <polygon points="265,180 250,142 282,172" fill="#111" stroke="#111" stroke-width="1"/>
       <polygon points="325,180 340,142 308,172" fill="#111" stroke="#111" stroke-width="1"/>
-      <!-- deadpan eyes — half-closed -->
-      <ellipse cx="280" cy="205" rx="13" ry="10" fill="white"/>
-      <ellipse cx="310" cy="205" rx="13" ry="10" fill="white"/>
-      <!-- upper lid covering half -->
-      <rect x="267" y="195" width="26" height="10" rx="2" fill="#111"/>
-      <rect x="297" y="195" width="26" height="10" rx="2" fill="#111"/>
-      <!-- flat mouth -->
+      <ellipse cx="280" cy="205" rx="13" ry="10" fill="white"/><ellipse cx="310" cy="205" rx="13" ry="10" fill="white"/>
+      <rect x="267" y="195" width="26" height="10" rx="2" fill="#111"/><rect x="297" y="195" width="26" height="10" rx="2" fill="#111"/>
       <line x1="285" y1="222" x2="305" y2="222" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
-      <!-- paws -->
       <ellipse cx="258" cy="338" rx="20" ry="11" fill="#111" stroke="#111" stroke-width="1.5"/>
       <ellipse cx="330" cy="338" rx="20" ry="11" fill="#111" stroke="#111" stroke-width="1.5"/>
-      <!-- name tag -->
       <rect x="264" y="350" width="62" height="22" rx="11" fill="white" stroke="#111" stroke-width="1.5"/>
       <text x="295" y="365" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#111" letter-spacing="1">MONO</text>
-
-      <!-- sparkles -->
       <text x="52" y="180" font-size="18" fill="#111" opacity="0.15">✦</text>
       <text x="370" y="160" font-size="14" fill="#111" opacity="0.12">✦</text>
-      <text x="380" y="320" font-size="10" fill="#111" opacity="0.1">✦</text>
-      <text x="38" y="310" font-size="10" fill="#111" opacity="0.1">✦</text>
     </svg>
-  </div>
-  <div class="cover-body">
-    <div class="cover-eyebrow">Shugo × Mono — Love Personality</div>
-    <div class="cover-title">你是哪種戀愛生物？</div>
-    <div class="cover-desc">
-      暈船到失去理智的修狗，<br>
-      還是封心鎖愛的石雕貓？<br>
-      6 道題，測出你在愛情裡是什麼模樣。
+
+    <!-- 封面圖自動載入 -->
+    <div class="cover-overlay">
+      <div class="cover-eyebrow">Shugo × Mono — Love Personality</div>
+      <div class="cover-title">你是哪種戀愛生物？</div>
+      <div class="cover-desc">
+        暈船到失去理智的修狗，<br>
+        還是封心鎖愛的石雕貓？<br>
+        10 道題，測出你在愛情裡是什麼模樣。
+      </div>
+      <button class="cover-start" onclick="startQuiz()">開始測驗 →</button>
     </div>
-    <button class="cover-start" onclick="startQuiz()">開始測驗 →</button>
   </div>
 </div>
 
 <!-- ══ QUIZ ══ -->
 <div class="screen hidden" id="quiz">
-  <div class="quiz-nav">
-    <button class="back-btn" onclick="goBack()">←</button>
-    <div class="dots" id="dots"></div>
-    <div class="q-count" id="qCount">1 / 6</div>
-  </div>
-  <div class="q-slide-wrap">
-    <div class="q-slide" id="qSlide">
-      <div class="q-img">
-        <div class="q-img-placeholder" id="qEmoji"></div>
-      </div>
-      <div class="q-body">
-        <div class="q-text" id="qText"></div>
-      </div>
-      <div class="opts" id="opts"></div>
-      <button class="quiz-next" id="nextBtn" onclick="next()">下一題 →</button>
+
+  <!-- 滿版圖片區（含題目文字直接畫在圖裡） -->
+  <div class="q-img-area" id="qImgArea">
+    <div class="q-img-placeholder" id="qEmoji"></div>
+
+    <!-- 只有進度條浮在圖上 -->
+    <div class="quiz-nav-float">
+      <button class="back-btn-float" onclick="goBack()">←</button>
+      <div class="dots" id="dots"></div>
+      <div class="q-count" id="qCount">1 / 10</div>
     </div>
+  </div>
+
+  <!-- 選項 -->
+  <div class="opts" id="opts"></div>
+  <div style="padding: 8px 24px 24px;">
+    <button class="quiz-next" id="nextBtn" onclick="next()">下一題 →</button>
   </div>
 </div>
 
@@ -477,6 +514,29 @@ body {
     </div>
 
     <div class="r-desc-card" id="rDesc"></div>
+    <div class="r-roast" id="rRoast"></div>
+
+    <!-- 交往首選 & 當朋友就好 -->
+    <div class="r-match-row">
+      <div class="r-match-box r-match-yes">
+        <div class="r-match-label">💗 交往首選</div>
+        <div class="r-match-img">
+          <div class="r-match-img-ph" id="rMatchPh">💗</div>
+          <!-- 換成你的角色圖 → <img src="match.jpg" alt=""> -->
+        </div>
+        <div class="r-match-name" id="rMatchName"></div>
+        <div class="r-match-desc" id="rMatchDesc"></div>
+      </div>
+      <div class="r-match-box r-match-no">
+        <div class="r-match-label">🤝 當朋友就好</div>
+        <div class="r-match-img">
+          <div class="r-match-img-ph" id="rAvoidPh">🤝</div>
+          <!-- 換成你的角色圖 → <img src="avoid.jpg" alt=""> -->
+        </div>
+        <div class="r-match-name" id="rAvoidName"></div>
+        <div class="r-match-desc" id="rAvoidDesc"></div>
+      </div>
+    </div>
 
     <div class="r-share-label">分享給朋友，看看他們是哪種戀愛生物 👇</div>
 
@@ -513,8 +573,6 @@ body {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-let currentResult = null;
-
 function saveResultImage() {
   if (!currentResult) return;
   const r = currentResult;
@@ -523,7 +581,7 @@ function saveResultImage() {
   btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 生成中…`;
 
   const card = document.getElementById('shareCard');
-  const siteUrl = 'https://irischen65.github.io/shugo-mono/';
+  const siteUrl = 'https://shugo-mono.netlify.app/';
   card.innerHTML = `
     <div style="background:#FAFAF8;width:600px;overflow:hidden">
       <div style="background:#E8E5DF;height:300px;display:flex;align-items:center;justify-content:center;font-size:110px">${r.emoji}</div>
@@ -543,12 +601,11 @@ function saveResultImage() {
           </div>
         </div>
         <div style="background:#F3F1EC;border-radius:14px;padding:18px;font-size:14px;color:#444;line-height:2;font-weight:300;margin-bottom:24px">${r.desc}</div>
-        <!-- share text block -->
         <div style="border-top:1px solid #E4E1DB;padding-top:20px">
-          <div style="font-size:14px;color:#111;font-weight:500;line-height:1.8;margin-bottom:8px">我的戀愛人格是「${r.name}」${r.emoji}</div>
+          <div style="font-size:14px;color:#111;font-weight:700;margin-bottom:6px">我的戀愛人格是「${r.name}」${r.emoji}</div>
           <div style="font-size:13px;color:#111;margin-bottom:6px">來測測你是哪種戀愛生物？</div>
           <div style="font-size:12px;color:#9A9690;margin-bottom:6px">#修狗 #面癱貓 #sansanink</div>
-          <div style="font-size:12px;color:#9A9690;letter-spacing:0.02em">${siteUrl}</div>
+          <div style="font-size:12px;color:#9A9690;">${siteUrl}</div>
         </div>
       </div>
     </div>`;
@@ -564,7 +621,11 @@ function saveResultImage() {
       if (navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
         canvas.toBlob(blob => {
           const file = new File([blob], filename, { type:'image/png' });
-          navigator.share({ title:`我是「${r.name}」${r.emoji}`, text:`來測測你是哪種戀愛生物？\n#修狗 #面癱貓 #sansanink`, files:[file] })
+          navigator.share({
+            title: `我的戀愛人格是「${r.name}」${r.emoji}`,
+            text: `我的戀愛人格是「${r.name}」${r.emoji}\n來測測你是哪種戀愛生物？\n#修狗 #面癱貓 #sansanink\nhttps://shugo-mono.netlify.app/`,
+            files: [file]
+          })
             .catch(() => downloadCanvas(canvas, filename));
         }, 'image/png');
       } else {
@@ -587,93 +648,161 @@ function downloadCanvas(canvas, filename) {
 const Qs = [
   { q:"喜歡一個人，你的第一步？", emoji:"💭",
     opts:[
-      {t:"主動出擊，今天就讓他知道", s:2},
-      {t:"默默觀察，先搞清楚他是什麼人", s:1},
-      {t:"喜歡？先確認是不是真的喜歡再說", s:0}
+      {t:"默默關注，但在本人面前裝沒事", r:"star"},
+      {t:"主動出擊，今天就讓他知道", r:"fire"},
+      {t:"先確認是不是真的喜歡再說", r:"rock"},
+      {t:"主動出擊，但傳完就盯手機等他回", r:"paw"},
+      {t:"等他先來找我", r:"fish"}
     ]
   },
   { q:"對方已讀不回兩小時，你在做什麼？", emoji:"📱",
     opts:[
-      {t:"傳了追蹤訊息又收回去，重整通知超過二十次", s:2},
-      {t:"哼，我也不打算主動。看誰撐得久", s:1},
-      {t:"兩小時？我根本忘記我傳了什麼", s:0}
+      {t:"哼，看誰撐得久", r:"fish"},
+      {t:"假裝在做別的事，但眼神一直飄向手機", r:"star"},
+      {t:"兩小時？我根本忘了", r:"rock"},
+      {t:"重整了二十幾次通知", r:"fire"},
+      {t:"傳了一則「你在忙嗎」又收回去了", r:"paw"}
     ]
   },
-  { q:"對方問「你喜歡我嗎？」你說？", emoji:"💬",
+  { q:"對方突然告白，你的反應？", emoji:"💬",
     opts:[
-      {t:"「喜歡。」眼神往地板，聲音小到快聽不見", s:2},
-      {t:"「也沒有討厭你。」這是我能給出最大的表白了", s:1},
-      {t:"「你為什麼要問這個。」真的想知道動機", s:0}
+      {t:"「我也喜歡你！」", r:"fire"},
+      {t:"愣住，眼眶有點紅，說不出話", r:"paw"},
+      {t:"「你認真的？」（語氣平淡，但回家之後整晚睡不著）", r:"star"},
+      {t:"臉紅，但說「你突然說這個幹嘛」", r:"fish"},
+      {t:"「我需要時間考慮一下」（真的在考慮）", r:"rock"}
     ]
   },
   { q:"你們吵架了，你會？", emoji:"⚡",
     opts:[
-      {t:"今天就要和好，不確認關係會睡不著", s:2},
-      {t:"說「沒事」但整個人在發冷氣，等他來哄", s:1},
-      {t:"說清楚誰對誰錯，道歉，結案", s:0}
+      {t:"說「沒事」然後真的不理他，但自己坐在那裡難受", r:"star"},
+      {t:"不主動，等他來哄", r:"fish"},
+      {t:"說「沒事」，然後傳個貼圖試探他有沒有在意", r:"paw"},
+      {t:"理性討論誰對誰錯", r:"rock"},
+      {t:"今天就要和好，不然睡不著", r:"fire"}
     ]
   },
   { q:"情人節你希望怎麼過？", emoji:"🕯️",
     opts:[
-      {t:"餐廳、手寫卡片、散步路線，全部都規劃好了", s:2},
-      {t:"嘴上說不用，但對方真的忘了會難過一週", s:1},
-      {t:"情人節跟平常有什麼差別？照常吃飯睡覺", s:0}
+      {t:"他主動安排我配合，不會先開口", r:"fish"},
+      {t:"嘴上說不用，但忘了會難過一週", r:"paw"},
+      {t:"餐廳、手寫卡片全部規劃好了", r:"fire"},
+      {t:"情人節跟平常有什麼差別", r:"rock"},
+      {t:"沒說想慶祝，但如果他安排了會很感動", r:"star"}
     ]
   },
   { q:"分手後，你會？", emoji:"🌧️",
     opts:[
-      {t:"難過很久，但最後還是會全力愛下一個", s:2},
-      {t:"默默封鎖，默默消化，不讓人看到脆弱", s:1},
-      {t:"刪掉清空，繼續過日子。感情就是這樣", s:0}
+      {t:"刪掉清空，繼續過日子", r:"rock"},
+      {t:"難過很久，但最後還是選擇相信愛情", r:"fire"},
+      {t:"默默封鎖，不讓人看到脆弱", r:"fish"},
+      {t:"跟誰都說「我很好」，但夜晚會獨自想很多", r:"star"},
+      {t:"對外說沒事，但一直希望對方來道歉", r:"paw"}
+    ]
+  },
+  { q:"看到對象的前任傳訊息給他，你？", emoji:"👀",
+    opts:[
+      {t:"忍了一整天，晚上問「你們還有聯絡啊？」", r:"paw"},
+      {t:"沒特別反應，覺得是他的事", r:"rock"},
+      {t:"「現在是怎樣啊？」語氣冷冷的", r:"fish"},
+      {t:"完全沒提，但那天特別安靜", r:"star"},
+      {t:"直接問「他傳什麼給你？」", r:"fire"}
+    ]
+  },
+  { q:"暗戀的人突然主動找你出去，你？", emoji:"🫀",
+    opts:[
+      {t:"先評估這個人值不值得", r:"rock"},
+      {t:"等十分鐘才回，讓他覺得你不是隨時都有空", r:"fish"},
+      {t:"馬上回，但傳完又開始擔心自己太急", r:"paw"},
+      {t:"秒回，已經想好見面要講什麼", r:"fire"},
+      {t:"故意過一段時間才回，裝作很淡定", r:"star"}
+    ]
+  },
+  { q:"傳了曖昧訊息，對方過了一陣子還沒回，你？", emoji:"😬",
+    opts:[
+      {t:"把那則訊息重讀了十遍", r:"fire"},
+      {t:"心裡很在意，為了賭氣故意下一次也過一陣子再回", r:"paw"},
+      {t:"若無其事繼續滑手機，但偷偷確認他有沒有在線上", r:"star"},
+      {t:"哼，那我也不理他", r:"fish"},
+      {t:"忘了這件事，繼續做自己的事", r:"rock"}
+    ]
+  },
+  { q:"跟曖昧的人約好了，他臨時取消，你？", emoji:"🌡️",
+    opts:[
+      {t:"「好，改天再說」，順勢做別的計畫", r:"rock"},
+      {t:"「沒關係」，但今晚心情整個不好了", r:"paw"},
+      {t:"「發生什麼事了？你還好嗎？」", r:"fire"},
+      {t:"「喔好」，沒多說，但心裡有點失落", r:"star"},
+      {t:"「好的」，內心默默扣分", r:"fish"}
     ]
   }
 ];
 
 const Rs = [
   {
-    min:10, max:12, emoji:"🔥",
+    img:"fire", emoji:"🔥",
     name:"究極暈船 SHUGO",
     tags:["#熱情直球","#愛到卡慘死","#儀式感大師"],
     stat1:{label:"暈船指數", val:"95%"},
     stat2:{label:"理智殘存", val:"5%"},
-    img:"fire",
-    desc:"你是感情裡的直球對決大師！一旦愛上就會全心投入，生活重心完全繞著對方轉。充滿儀式感是你最可愛的地方，但記得留點愛給自己。"
+    desc:"你愛起來是真的全給，但你有沒有發現——你其實很少問對方要不要。你以為儀式感是愛，但有時候對方只是想安靜待著。你最大的盲點是：你給的愛，是你想給的，不一定是對方需要的。",
+    roast:"喜歡一個人三天，已經在考慮要送什麼周年禮物了。",
+    match:"傲嬌面癱 MONO",
+    matchDesc:"你很會給，他需要人追，剛好",
+    avoid:"絕情石雕 MONO",
+    avoidDesc:"你全心付出，他冷冷接著，你會很累"
   },
   {
-    min:7, max:9, emoji:"🐾",
+    img:"paw", emoji:"🐾",
     name:"討拍修狗 SHUGO",
-    tags:["#熱情但玻璃心","#內心劇場爆棚","#表面裝沒事"],
+    tags:["#需要被看見","#情緒會外漏","#其實很好哄"],
     stat1:{label:"黏人指數", val:"75%"},
     stat2:{label:"裝沒事指數", val:"25%"},
-    img:"paw",
-    desc:"本質上是個熱情又黏踢踢的修狗，但對方只要稍微冷淡，你的內心小劇場立刻開播。表面說沒事，私底下已默默記上一筆。"
+    desc:"你不是故意迂迴，只是不太會直接說「我需要你」。所以你傳了個貼圖，等他問你怎麼了。但你有沒有想過——如果對方沒有發現，你會覺得是他不夠愛你，但其實你從來沒有說清楚。",
+    roast:"你說「沒事」的語氣裡，藏了至少五件事。",
+    match:"究極暈船 SHUGO",
+    matchDesc:"他很敏感、很會哄，剛好是你需要的",
+    avoid:"絕情石雕 MONO",
+    avoidDesc:"你等他來哄，他根本沒注意到你不開心"
   },
   {
-    min:5, max:6, emoji:"💜",
+    img:"star", emoji:"💜",
     name:"薛丁格的貓狗",
     tags:["#反差萌","#外冷內熱","#最致命的類型"],
     stat1:{label:"高冷外表", val:"60%"},
     stat2:{label:"內心小劇場", val:"40%"},
-    img:"star",
-    desc:"外人面前是高冷獨立貓，在真正喜歡的人面前秒變撒嬌狗。你藏得太深了——但正因如此，你的溫柔才是最讓人淪陷的武器。"
+    desc:"你不是不在乎，你只是需要先確認安全才敢打開。但問題是——你的「安全」標準高到對方永遠不知道自己有沒有過關。很多人在等你打開之前就先放棄了，而你還以為是對方不夠喜歡你。",
+    roast:"你喜歡一個人的方式，是讓他永遠猜不透你。",
+    match:"討拍修狗 SHUGO",
+    matchDesc:"他敏感、有耐心、會一直試探你有沒有在",
+    avoid:"究極暈船 SHUGO",
+    avoidDesc:"他太熱情，你會覺得有壓力想逃"
   },
   {
-    min:3, max:4, emoji:"🐟",
+    img:"fish", emoji:"🐟",
     name:"傲嬌面癱 MONO",
     tags:["#敵不動我不動","#需要人融化","#嘴硬心軟"],
     stat1:{label:"傲嬌指數", val:"88%"},
     stat2:{label:"主動出擊", val:"12%"},
-    img:"fish",
-    desc:"「敵不動我不動」是你的戀愛最高指導原則。其實心裡很在意，但打死都不會主動說出口。需要對方有超級多耐心，才能一層一層把你融化。"
+    desc:"你在等對方來，等到了又要裝沒事。你以為這叫矜持，但有時候對方只是真的不知道你喜歡他。不是每個人都會一直追，有些好的人，你等著等著就錯過了。",
+    roast:"你說「隨便」，但對方真的隨便，你會生氣三天。",
+    match:"討拍修狗 SHUGO",
+    matchDesc:"他會主動試探、不怕被你冷，剛好戳到你",
+    avoid:"絕情石雕 MONO",
+    avoidDesc:"兩個都不主動，關係很難往前走"
   },
   {
-    min:0, max:2, emoji:"🪨",
+    img:"rock", emoji:"🪨",
     name:"絕情石雕 MONO",
     tags:["#封心鎖愛","#蛤","#理智永遠上線"],
     stat1:{label:"獨立指數", val:"97%"},
     stat2:{label:"戀愛細胞", val:"3%"},
-    img:"rock",
-    desc:"愛情對你只是生活調味料，絕非必需品。封心鎖愛！比起談戀愛，你更在乎今天晚餐吃什麼，還有晚上有幾小時的珍貴獨處時間。"
+    desc:"你說感情不是必需品，這是真的。但你有沒有想過——你說的「不需要」，有多少是真的自在，又有多少是保護自己不受傷的方式？不是每個靠近你的人都會傷你，只是你還沒準備好賭這一把。",
+    roast:"你談戀愛的方式是：對方先喜歡你三年，你考慮考慮。",
+    match:"薛丁格的貓狗",
+    matchDesc:"兩個都需要空間，不會互相勒索，反而安心",
+    avoid:"討拍修狗 SHUGO",
+    avoidDesc:"他需要你回應情緒，你給不了，雙方都累"
   }
 ];
 
@@ -838,8 +967,8 @@ const ResultSVGs = {
 </svg>`
 };
 
-const LABELS = ['A','B','C'];
-let cur = 0, total = 0, sel = null;
+const LABELS = ['A','B','C','D','E'];
+let cur = 0, votes = {fire:0, paw:0, star:0, fish:0, rock:0}, sel = null;
 
 function buildDots() {
   const w = document.getElementById('dots');
@@ -857,7 +986,23 @@ function renderQ() {
   buildDots();
   document.getElementById('qCount').textContent = `${cur+1} / ${Qs.length}`;
   document.getElementById('qEmoji').textContent = q.emoji;
-  document.getElementById('qText').textContent = q.q;
+
+  // 背景圖：把 images/q1.jpg ~ q10.jpg 放進 images 資料夾
+  const imgArea = document.getElementById('qImgArea');
+  const imgPath = `images/q${cur+1}.jpg`;
+  const img = new Image();
+  img.onload = () => {
+    imgArea.style.backgroundImage = `url(${imgPath})`;
+    imgArea.style.backgroundSize = 'cover';
+    imgArea.style.backgroundPosition = 'center';
+    document.getElementById('qEmoji').style.opacity = '0';
+  };
+  img.onerror = () => {
+    imgArea.style.backgroundImage = '';
+    document.getElementById('qEmoji').style.opacity = '1';
+  };
+  img.src = imgPath;
+  document.getElementById('nextBtn').textContent = cur === Qs.length - 1 ? '查看結果 →' : '下一題 →';
   document.getElementById('nextBtn').classList.remove('on');
 
   const wrap = document.getElementById('opts');
@@ -876,7 +1021,7 @@ function renderQ() {
     btn.onclick = () => {
       wrap.querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
-      sel = o.s;
+      sel = o.r;
       document.getElementById('nextBtn').classList.add('on');
     };
     wrap.appendChild(btn);
@@ -884,8 +1029,7 @@ function renderQ() {
 }
 
 function slideQ(direction) {
-  // direction: 1 = forward (slide left), -1 = backward (slide right)
-  const slide = document.getElementById('qSlide');
+  const slide = document.getElementById('qImgArea');
   const outClass  = direction > 0 ? 'out-left'    : 'out-right';
   const inClass   = direction > 0 ? 'from-right'  : 'from-left';
 
@@ -913,14 +1057,15 @@ function switchScreen(from, to) {
 }
 
 function startQuiz() {
-  cur = 0; total = 0; sel = null;
+  cur = 0; votes = {fire:0, paw:0, star:0, fish:0, rock:0}; sel = null;
   renderQ();
   switchScreen('cover','quiz');
 }
 
 function next() {
   if (sel === null) return;
-  total += sel; cur++;
+  votes[sel]++;
+  cur++;
   document.getElementById('nextBtn').classList.remove('on');
   if (cur >= Qs.length) { showResult(); return; }
   document.getElementById('quiz').scrollTop = 0;
@@ -929,22 +1074,24 @@ function next() {
 
 function goBack() {
   if (cur === 0) { switchScreen('quiz','cover'); return; }
-  cur--; total = 0;
+  cur--; votes = {fire:0, paw:0, star:0, fish:0, rock:0}; sel = null;
   document.getElementById('nextBtn').classList.remove('on');
   document.getElementById('quiz').scrollTop = 0;
   slideQ(-1);
 }
 
 function showResult() {
-  const r = Rs.find(x => total >= x.min && total <= x.max);
+  const order = ['fire','paw','star','fish','rock'];
+  const winner = order.reduce((a, b) => votes[a] >= votes[b] ? a : b);
+  const r = Rs.find(x => x.img === winner);
   currentResult = r;
 
-  // inject SVG illustration
   const imgWrap = document.getElementById('rImg');
   imgWrap.innerHTML = ResultSVGs[r.img];
 
   document.getElementById('rName').textContent = r.name;
   document.getElementById('rDesc').textContent = r.desc;
+  document.getElementById('rRoast').textContent = r.roast;
 
   const tagWrap = document.getElementById('rTags');
   tagWrap.innerHTML = '';
@@ -959,28 +1106,23 @@ function showResult() {
   document.getElementById('rStat2Label').textContent = r.stat2.label;
   document.getElementById('rStat2Val').textContent   = r.stat2.val;
 
-  const siteUrl = 'https://irischen65.github.io/shugo-mono/';
+  // match section
+  document.getElementById('rMatchName').textContent = r.match;
+  document.getElementById('rMatchDesc').textContent = r.matchDesc;
+  document.getElementById('rAvoidName').textContent = r.avoid;
+  document.getElementById('rAvoidDesc').textContent = r.avoidDesc;
+
+  const siteUrl = 'https://shugo-mono.netlify.app/';
   const url = encodeURIComponent(siteUrl);
-  const lineText = encodeURIComponent(
-`我的戀愛人格是「${r.name}」${r.emoji}
-來測測你是哪種戀愛生物？
-#修狗 #面癱貓 #sansanink
-${siteUrl}`
-  );
-  const threadsText = encodeURIComponent(
-`我的戀愛人格是「${r.name}」${r.emoji}
-來測測你是哪種戀愛生物？
-#修狗 #面癱貓 #sansanink
-${siteUrl}`
-  );
+  const shareMsg = encodeURIComponent(`我的戀愛人格是「${r.name}」${r.emoji}\n來測測你是哪種戀愛生物？\n#修狗 #面癱貓 #sansanink\n${siteUrl}`);
 
   const lineBtn = document.getElementById('lineBtn');
   lineBtn.href = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
-    ? `https://line.me/R/share?text=${lineText}`
-    : `https://social-plugins.line.me/lineit/share?url=${url}&text=${lineText}`;
+    ? `https://line.me/R/share?text=${shareMsg}`
+    : `https://social-plugins.line.me/lineit/share?url=${url}&text=${shareMsg}`;
 
   document.getElementById('threadsBtn').href =
-    `https://www.threads.net/intent/post?text=${threadsText}`;
+    `https://www.threads.net/intent/post?text=${shareMsg}`;
 
   const btn = document.getElementById('copyBtn');
   btn.textContent = '📋 複製測驗連結';
@@ -1002,7 +1144,7 @@ function copyUrl() {
 }
 
 function restart() {
-  cur = 0; total = 0; sel = null;
+  cur = 0; votes = {fire:0, paw:0, star:0, fish:0, rock:0}; sel = null;
   currentResult = null;
   const btn = document.getElementById('saveImgBtn');
   if (btn) {
